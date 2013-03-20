@@ -6,6 +6,7 @@ http://moodle.org/plugins/view.php?plugin=mod_checklist
 
 ==Changes==
 
+* 2013-03-20 - Fix assign-by-reference error
 * 2012-09-19 - Split the 3 plugins (mod / block / grade report) into separate repos for better maintenance
 * 2012-07-07 - Tested against Moodle 2.3
 * 2012-02-02 - Added optional percentages for each student / heading / item - based on code from Gordon Bateson ( gordonbateson@gmail.com )
