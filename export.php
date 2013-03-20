@@ -115,7 +115,7 @@ $workbook->send($downloadfilename);
 /// Adding the worksheet
 $wsname = str_replace(array('\\','/','?','*','[',']',' ',':','\''), '', $checklist->name);
 $wsname = substr($wsname, 0, 31);
-$myxls =& $workbook->add_worksheet($wsname);
+$myxls = $workbook->add_worksheet($wsname);
 
 /// Print names of all the fields
 $col = 0;
