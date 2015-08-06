@@ -225,7 +225,7 @@ foreach ($users as $user) {
 
         } else if ($field == '_enroldate') {
             $sql = 'SELECT ue.id, ue.timestart FROM {user_enrolments} ue, {enrol} e ';
-            $sql .= 'WHERE e.id = ue.enrolid AND e.courseid = ? AND ue.userid = ? AND e.enrol <> "guest" ';
+            $sql .= "WHERE e.id = ue.enrolid AND e.courseid = ? AND ue.userid = ? AND e.enrol <> 'guest' ";
             $sql .= 'ORDER BY ue.timestart ASC ';
             $enrolement = $DB->get_records_sql($sql, array($course->id, $user->id), 0, 1);
             $datestr = '';
@@ -236,7 +236,7 @@ foreach ($users as $user) {
             $myxls->write_string($row, $col++, $datestr);
 
         } else if ($field == '_startdate') {
-            $firstview = $DB->get_records_select('log', 'userid = ? AND course = ? AND module = "course" AND action = "view"', array($user->id, $course->id), 'time ASC', 'id, time', 0, 1);
+            $firstview = $DB->get_records_select('log', "userid = ? AND course = ? AND module = 'course' AND action = 'view'", array($user->id, $course->id), 'time ASC', 'id, time', 0, 1);
             $datestr = '';
             if (!empty($firstview)) {
                 $firstview = reset($firstview);
