@@ -87,17 +87,33 @@ if (!$percentcol) {
 }
 
 // Useful for debugging
-/*class FakeMoodleExcelWorkbook {
-    function FakeMoodleExcelWorkbook($ignore) {}
-    function send($ignore) {}
-    function write_string($row, $col, $data) { echo "($row, $col) = $data<br/>"; }
-    function write_number($row, $col, $data) { echo "($row, $col) = $data<br/>"; }
-    function add_worksheet($ignore) { return new FakeMoodleExcelWorkbook($ignore); }
-    function close() {}
-    }*/
+if (defined('BEHAT_SITE_RUNNING')) {
+    class FakeMoodleExcelWorkbook {
+        function FakeMoodleExcelWorkbook($ignore) {
+        }
+
+        function send($ignore) {
+        }
+
+        function write_string($row, $col, $data) {
+            echo "($row, $col) = $data<br/>";
+        }
+
+        function write_number($row, $col, $data) {
+            echo "($row, $col) = $data<br/>";
+        }
+
+        function add_worksheet($ignore) {
+            return new FakeMoodleExcelWorkbook($ignore);
+        }
+
+        function close() {
+        }
+    }
+}
 
 
-// Only write the data if it exists
+// Only write the data if it exists.
 function safe_write_string($myxls, $row, $col, $user, $extra, $element) {
     if (isset($user[$element])) {
         $myxls->write_string($row, $col, $user[$element]);
@@ -106,13 +122,17 @@ function safe_write_string($myxls, $row, $col, $user, $extra, $element) {
     }
 }
 
-/// Calculate file name
+// Calculate file name.
 $downloadfilename = clean_filename("{$course->shortname} {$checklist->name} $strchecklistreport.xls");
-/// Creating a workbook
-$workbook = new MoodleExcelWorkbook("-");
-/// Sending HTTP headers
+// Creating a workbook.
+if (defined('BEHAT_SITE_RUNNING')) {
+    $workbook = new FakeMoodleExcelWorkbook("-");
+} else {
+    $workbook = new MoodleExcelWorkbook("-");
+}
+// Sending HTTP headers.
 $workbook->send($downloadfilename);
-/// Adding the worksheet
+// Adding the worksheet.
 $wsname = str_replace(array('\\','/','?','*','[',']',' ',':','\''), '', $checklist->name);
 $wsname = substr($wsname, 0, 31);
 $myxls = $workbook->add_worksheet($wsname);
