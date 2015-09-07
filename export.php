@@ -68,7 +68,7 @@ $teachermarking = $checklist->teacheredit != CHECKLIST_MARKING_STUDENT;
 
 $strchecklistreport = get_string('checklistreport','gradeexport_checklist');
 
-$users = get_users_by_capability($context, 'mod/checklist:updateown', 'u.*', 'u.firstname', '', '', $group, false);
+$users = get_users_by_capability($context, 'mod/checklist:updateown', 'u.*', 'u.firstname, u.lastname', '', '', $group, false);
 
 if ($district && $district != 'ALL' && $users) {
     list($usql, $uparam) = $DB->get_in_or_equal(array_keys($users));
@@ -236,11 +236,38 @@ foreach ($users as $user) {
             $myxls->write_string($row, $col++, $datestr);
 
         } else if ($field == '_startdate') {
-            $firstview = $DB->get_records_select('log', "userid = ? AND course = ? AND module = 'course' AND action = 'view'", array($user->id, $course->id), 'time ASC', 'id, time', 0, 1);
+            $firstview = null;
+            if ($CFG->branch < 27) {
+                $select = "userid = ? AND course = ? AND module = 'course' AND action = 'view'";
+                $params = array($user->id, $course->id);
+                $entries = $DB->get_records_select('log', $select, $params, 'time ASC', 'id, time', 0, 1);
+                $entry = reset($entries);
+                if ($entry) {
+                    $firstview = $entry->time;
+                }
+            } else {
+                $manager = get_log_manager();
+                if ($CFG->branch < 29) {
+                    $readers = $manager->get_readers('\core\log\sql_select_reader');
+                } else {
+                    $readers = $manager->get_readers('\core\log\sql_reader');
+                }
+                /** @var \core\log\sql_reader $reader */
+                $reader = reset($readers);
+                if ($reader) {
+                    $select = "userid = ? AND courseid = ? AND target = 'course' AND action = 'viewed'";
+                    $params = array($user->id, $course->id);
+                    $events = $reader->get_events_select($select, $params, 'timecreated ASC', 0, 1);
+                    /** @var \core\event\base $event */
+                    $event = reset($events);
+                    if ($event) {
+                        $firstview = $event->timecreated;
+                    }
+                }
+            }
             $datestr = '';
             if (!empty($firstview)) {
-                $firstview = reset($firstview);
-                $datestr = userdate($firstview->time, get_string('strftimedate'));
+                $datestr = userdate($firstview, get_string('strftimedate'));
             }
             $myxls->write_string($row, $col++, $datestr);
 
