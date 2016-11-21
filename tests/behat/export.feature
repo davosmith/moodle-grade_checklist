@@ -65,7 +65,7 @@ Feature: Checklists export without warnings or errors
 
   Scenario: The teacher exports the checklist
     When I follow "Course 1"
-    And I navigate to "Grades" node in "Course administration"
+    And I navigate to "Gradebook setup" node in "Course administration"
     And I navigate to "Checklist" node in "Grade administration > Export"
     And I set the following fields to these values:
       | Checklist to export     | Test checklist 1 |
