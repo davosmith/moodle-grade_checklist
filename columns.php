@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 // This lists the fields to be included from the 'user' table
 // (checklist items will appear in the columns to the right of these fields)
 // You can include either standard user field names or custom fields
@@ -29,7 +31,7 @@
 
 // The second part of each array entry is the text to appear at the top of the column.
 
-$checklist_report_user_columns = [
+$checklistexportusercolumns = [
     'lastname' => get_string('lastname'),
     'firstname' => get_string('firstname'),
     'username' => get_string('username'),

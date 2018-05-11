@@ -93,7 +93,7 @@ if ($district && $district !== 'ALL' && $users) {
        SELECT u.*
          FROM ({user} u
          JOIN {user_info_data} ud ON u.id = ud.userid)
-         JOIN {user_info_field} uf ON ud.fieldid = uf.id 
+         JOIN {user_info_field} uf ON ud.fieldid = uf.id
         WHERE u.id $usql AND uf.shortname = 'district' AND ud.data = ?";
     $users = $DB->get_records_sql($sql, array_merge($uparam, [$district]));
 }
@@ -103,7 +103,7 @@ if (!$users) {
 
 require_once($CFG->dirroot.'/grade/export/checklist/columns.php');
 if (!$percentcol) {
-    unset($checklist_report_user_columns['_percent']);
+    unset($checklistexportusercolumns['_percent']);
 }
 
 // Useful for debugging.
@@ -159,7 +159,7 @@ $myxls = $workbook->add_worksheet($wsname);
 // Print names of all the fields.
 $col = 0;
 $row = 0;
-foreach ($checklist_report_user_columns as $field => $headerstr) {
+foreach ($checklistexportusercolumns as $field => $headerstr) {
     $myxls->write_string($row, $col++, $headerstr);
 }
 
@@ -211,7 +211,7 @@ if ($items) {
 
     if (!empty($countitems)) {
         $row++;
-        $columncount = count($checklist_report_user_columns);
+        $columncount = count($checklistexportusercolumns);
         for ($col = 0; $col < $columncount; $col++) {
             $myxls->write_string($row, $col, '');
         }
@@ -236,7 +236,7 @@ foreach ($users as $user) {
     $sql = "
        SELECT uf.shortname, ud.data
          FROM {user_info_data} ud
-         JOIN {user_info_field} uf ON uf.id = ud.fieldid 
+         JOIN {user_info_field} uf ON uf.id = ud.fieldid
         WHERE ud.userid = ?
     ";
     $extra = $DB->get_records_sql($sql, array($user->id));
@@ -244,12 +244,12 @@ foreach ($users as $user) {
     if ($groups) {
         $groups = array_values($groups);
         $first = reset($groups);
-        $groups_str = $first->name;
+        $groupsstr = $first->name;
         while ($next = next($groups)) {
-            $groups_str .= ', '.$next->name;
+            $groupsstr .= ', '.$next->name;
         }
     } else {
-        $groups_str = '';
+        $groupsstr = '';
     }
     $col = 0;
 
@@ -257,19 +257,19 @@ foreach ($users as $user) {
        SELECT i.id, i.itemoptional, c.usertimestamp, c.teachermark
          FROM {checklist_item} i
          LEFT JOIN (
-             SELECT ch.item, ch.usertimestamp, ch.teachermark 
+             SELECT ch.item, ch.usertimestamp, ch.teachermark
                FROM {checklist_check} ch
               WHERE ch.userid = ?
-         ) c ON c.item = i.id 
+         ) c ON c.item = i.id
        WHERE i.checklist = ? AND userid = 0 $itemoptional AND i.hidden = 0
        ORDER BY i.position
     ";
     $checks = $DB->get_records_sql($sql, array($user->id, $checklist->id));
 
     $userarray = (array)$user;
-    foreach ($checklist_report_user_columns as $field => $header) {
+    foreach ($checklistexportusercolumns as $field => $header) {
         if ($field === '_groups') {
-            $myxls->write_string($row, $col++, $groups_str);
+            $myxls->write_string($row, $col++, $groupsstr);
 
         } else if ($field === '_enroldate') {
             $sql = 'SELECT ue.id, ue.timestart FROM {user_enrolments} ue, {enrol} e ';
