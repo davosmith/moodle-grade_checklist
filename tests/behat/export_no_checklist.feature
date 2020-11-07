@@ -1,5 +1,5 @@
 @grade @gradeexport @gradeexport_checklist @checklist
-Feature: Checklists export without warnings or errors
+Feature: Exporting when there are no checklists on the course, should show a sensible message, not a fatal error
 
   Background:
     Given the following "users" exist:
@@ -16,7 +16,7 @@ Feature: Checklists export without warnings or errors
       | C1     | student2 | student        |
       | C1     | teacher1 | editingteacher |
 
-  Scenario: The teacher exports the checklist
+  Scenario: The teacher visits the checklist export page
     Given I log in as "teacher1"
     When I am on "Course 1" course homepage
     And I navigate to "Export > Checklist" in the course gradebook
