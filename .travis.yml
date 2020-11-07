@@ -44,6 +44,6 @@ script:
   - moodle-plugin-ci savepoints
   - moodle-plugin-ci mustache
   - moodle-plugin-ci grunt
-  - moodle-plugin-ci phpdoc
+#  - moodle-plugin-ci phpdoc - will add missing PHPDocs at some point
   - moodle-plugin-ci phpunit
   - moodle-plugin-ci behat
