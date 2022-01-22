@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Custom behat steps
+ */
 class behat_gradeexport_checklist extends behat_base {
 
     /**
