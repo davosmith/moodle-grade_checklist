@@ -6,6 +6,7 @@ http://moodle.org/plugins/view.php?plugin=mod_checklist
 
 ==Changes==
 
+* 2023-04-14 - 3.4.1.0 - Minor M4.2 compatibility fixes
 * 2022-11-19 - Minor M4.1 compatibility fixes
 * 2022-06-28 - Add missing tertiary navigation in M4.0 (to access other grade export plugins)
 * 2022-01-22 - Minor M4.0 compatibility fixes
