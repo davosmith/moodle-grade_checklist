@@ -77,7 +77,17 @@ jobs:
           sudo locale-gen en_AU.UTF-8
           echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
 
-      - name: Install moodle-plugin-ci
+      - name: Install moodle-plugin-ci (old)
+        if: ${{ contains(fromJSON('["MOODLE_39_STABLE", "MOODLE_310_STABLE", "MOODLE_311_STABLE", "MOODLE_400_STABLE", "MOODLE_401_STABLE"]'), matrix.moodle-branch) }}
+        run: |
+          moodle-plugin-ci add-plugin --branch MOODLE_39_STABLE davosmith/moodle-checklist
+          moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+        env:
+          DB: ${{ matrix.database }}
+          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
+
+      - name: Install moodle-plugin-ci (new)
+        if: ${{ !contains(fromJSON('["MOODLE_39_STABLE", "MOODLE_310_STABLE", "MOODLE_311_STABLE", "MOODLE_400_STABLE", "MOODLE_401_STABLE"]'), matrix.moodle-branch) }}
         run: |
           moodle-plugin-ci add-plugin davosmith/moodle-checklist
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
