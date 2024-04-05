@@ -28,8 +28,8 @@ require_once($CFG->dirroot.'/grade/lib.php');
 
 $courseid = required_param('id', PARAM_INT);
 
-$PAGE->set_url(new moodle_url('/grade/export/checklist/index.php', array('id' => $courseid)));
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+$PAGE->set_url(new moodle_url('/grade/export/checklist/index.php', ['id' => $courseid]));
+if (!$course = $DB->get_record('course', ['id' => $courseid])) {
     throw new moodle_exception('nocourseid');
 }
 
@@ -55,7 +55,8 @@ if (class_exists('\core_grades\output\export_action_bar')) {
     } else {
         $actionbar = new \core_grades\output\export_action_bar($context, null, 'checklist');
     }
-    print_grade_page_head($COURSE->id, 'export', 'checklist', $strchkgrades, false, false, true, null, null, null, $actionbar);
+    print_grade_page_head($COURSE->id, 'export', 'checklist', $strchkgrades, false, false, true, null, null, null,
+                          $actionbar);
 } else {
     print_grade_page_head($COURSE->id, 'export', 'checklist', $strchkgrades);
 }
@@ -71,22 +72,22 @@ if (empty($checklists)) {
 }
 
 // Get list of districts.
-if ($DB->get_record('user_info_field', array('shortname' => 'district'))) {
+if ($DB->get_record('user_info_field', ['shortname' => 'district'])) {
     if (!$viewall) {
         $sql = "SELECT ud.data AS district FROM {user_info_data} ud, {user_info_field} uf ";
         $sql .= "WHERE ud.fieldid = uf.id AND uf.shortname = 'district' AND ud.userid = ?";
-        $district = $DB->get_record_sql($sql, array($USER->id));
+        $district = $DB->get_record_sql($sql, [$USER->id]);
 
         if ($district) {
-            $districts = array($district->district);
+            $districts = [$district->district];
         } else {
-            $districts = array(get_string('nodistrict', 'gradeexport_checklist'));
+            $districts = [get_string('nodistrict', 'gradeexport_checklist')];
         }
 
     } else {
         $sql = "SELECT DISTINCT ud.data AS district FROM {user_info_data} ud, {user_info_field} uf ";
         $sql .= "WHERE ud.fieldid = uf.id AND uf.shortname = 'district'";
-        $districts = $DB->get_records_sql($sql, array());
+        $districts = $DB->get_records_sql($sql, []);
 
         $districts = array_keys($districts);
     }
@@ -95,7 +96,7 @@ if ($DB->get_record('user_info_field', array('shortname' => 'district'))) {
 }
 
 // Get list of groups.
-$groupsmenu = array();
+$groupsmenu = [];
 $groupsmenu[0] = get_string('allparticipants'); // Always available - only exports groups user has access to.
 if ($course->groupmode == VISIBLEGROUPS || has_capability('moodle/site:accessallgroups', $context)) {
     $allowedgroups = groups_get_all_groups($course->id);

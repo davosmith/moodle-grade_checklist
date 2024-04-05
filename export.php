@@ -75,7 +75,7 @@ if ($group) {
     }
 }
 
-if (!$checklist = $DB->get_record('checklist', array('id' => $checklistid))) {
+if (!$checklist = $DB->get_record('checklist', ['id' => $checklistid])) {
     throw new moodle_exception('checklistnotfound', 'gradeexport_checklist');
 }
 
@@ -84,10 +84,11 @@ $teachermarking = ($checklist->teacheredit != CHECKLIST_MARKING_STUDENT);
 
 $strchecklistreport = get_string('checklistreport', 'gradeexport_checklist');
 
-$users = get_users_by_capability($context, 'mod/checklist:updateown', 'u.*', 'u.firstname, u.lastname', '', '', $group, false);
+$users = get_users_by_capability($context, 'mod/checklist:updateown', 'u.*', 'u.firstname, u.lastname', '', '', $group,
+                                 false);
 
 if ($district && $district !== 'ALL' && $users) {
-    list($usql, $uparam) = $DB->get_in_or_equal(array_keys($users));
+    [$usql, $uparam] = $DB->get_in_or_equal(array_keys($users));
 
     $sql = "
        SELECT u.*
@@ -191,7 +192,7 @@ if (defined('BEHAT_SITE_RUNNING')) {
 // Sending HTTP headers.
 $workbook->send($downloadfilename);
 // Adding the worksheet.
-$wsname = str_replace(array('\\', '/', '?', '*', '[', ']', ' ', ':', '\''), '', $checklist->name);
+$wsname = str_replace(['\\', '/', '?', '*', '[', ']', ' ', ':', '\''], '', $checklist->name);
 $wsname = substr($wsname, 0, 31);
 $myxls = $workbook->add_worksheet($wsname);
 
@@ -218,23 +219,23 @@ if ($percentheadings) {
 
 $items = $DB->get_records_select('checklist_item',
                                  "checklist = ? AND userid = 0 $itemoptional AND hidden = 0",
-                                 array($checklist->id), 'position');
+                                 [$checklist->id], 'position');
 if ($items) {
     $parentitem = 0;
     foreach ($items as $item) {
         if ($item->itemoptional == CHECKLIST_OPTIONAL_HEADING) {
             $parentitem = $item->id;
-            $items[$item->id]->subitems = array();
+            $items[$item->id]->subitems = [];
         } else if ($parentitem && $item->itemoptional == CHECKLIST_OPTIONAL_NO) {
             $items[$parentitem]->subitems[] = $item->id;
         }
         $myxls->write_string($row, $col++, strip_tags($item->displaytext));
     }
 
-    $countitems = array();
+    $countitems = [];
     if ($percentrow && !empty($users)) {
-        list($isql, $iparam) = $DB->get_in_or_equal(array_keys($items));
-        list($usql, $uparam) = $DB->get_in_or_equal(array_keys($users));
+        [$isql, $iparam] = $DB->get_in_or_equal(array_keys($items));
+        [$usql, $uparam] = $DB->get_in_or_equal(array_keys($users));
         $sql = "SELECT item, COUNT(*) AS countitems
                   FROM {checklist_check}
                  WHERE item $isql
@@ -278,7 +279,7 @@ foreach ($users as $user) {
          JOIN {user_info_field} uf ON uf.id = ud.fieldid
         WHERE ud.userid = ?
     ";
-    $extra = $DB->get_records_sql($sql, array($user->id));
+    $extra = $DB->get_records_sql($sql, [$user->id]);
     $groups = groups_get_all_groups($course->id, $user->id, 0, 'g.id, g.name');
     if ($groups) {
         $groups = array_values($groups);
@@ -303,7 +304,7 @@ foreach ($users as $user) {
        WHERE i.checklist = ? AND userid = 0 $itemoptional AND i.hidden = 0
        ORDER BY i.position
     ";
-    $checks = $DB->get_records_sql($sql, array($user->id, $checklist->id));
+    $checks = $DB->get_records_sql($sql, [$user->id, $checklist->id]);
 
     $userarray = (array)$user;
     foreach ($checklistexportusercolumns as $field => $header) {
@@ -314,7 +315,7 @@ foreach ($users as $user) {
             $sql = 'SELECT ue.id, ue.timestart FROM {user_enrolments} ue, {enrol} e ';
             $sql .= "WHERE e.id = ue.enrolid AND e.courseid = ? AND ue.userid = ? AND e.enrol <> 'guest' ";
             $sql .= 'ORDER BY ue.timestart ASC ';
-            $enrolement = $DB->get_records_sql($sql, array($course->id, $user->id), 0, 1);
+            $enrolement = $DB->get_records_sql($sql, [$course->id, $user->id], 0, 1);
             $datestr = '';
             if (!empty($enrolement)) {
                 $enrolement = reset($enrolement);
@@ -332,7 +333,7 @@ foreach ($users as $user) {
                 $tablename = $reader->get_internal_log_table_name();
                 $cond = [
                     'userid' => $user->id, 'courseid' => $course->id,
-                    'target' => 'course', 'action' => 'viewed'
+                    'target' => 'course', 'action' => 'viewed',
                 ];
                 $firstview = $DB->get_field($tablename, 'MIN(timecreated)', $cond);
             }

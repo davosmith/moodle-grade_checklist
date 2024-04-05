@@ -24,48 +24,48 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'gradeexport/checklist:view' => array(
+    'gradeexport/checklist:view' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'gradeexport/checklist:viewall' => array(
+    'gradeexport/checklist:viewall' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'gradeexport/checklist:viewdistrict' => array(
+    'gradeexport/checklist:viewdistrict' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'gradeexport/checklist:publish' => array(
+    'gradeexport/checklist:publish' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        )
-    )
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-);
+];

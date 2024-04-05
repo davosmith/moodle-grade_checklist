@@ -38,7 +38,7 @@ $checklistexportusercolumns = [
     '_groups' => 'Groups(s)',
     '_enroldate' => get_string('enroldate', 'gradeexport_checklist'),
     '_startdate' => get_string('startdate', 'gradeexport_checklist'),
-    '_percent' => get_string('percent', 'gradeexport_checklist') // Percentage of items student has completed.
+    '_percent' => get_string('percent', 'gradeexport_checklist'), // Percentage of items student has completed.
 ];
 
 // The output from the default setting above would be:
