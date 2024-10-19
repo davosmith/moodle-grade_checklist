@@ -30,3 +30,4 @@ $plugin->release = '3.4.2.2';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'gradeexport_checklist';
 $plugin->dependencies = ['mod_checklist' => 2010041800]; // Must have checklist activity module installed.
+$plugin->supported = [34, 405];
