@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024040500;
+$plugin->version = 20241019000;
 $plugin->requires = 2017111300; // Moodle 3.4+.
-$plugin->release = '3.4.2.1';
+$plugin->release = '3.4.2.2';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'gradeexport_checklist';
 $plugin->dependencies = ['mod_checklist' => 2010041800]; // Must have checklist activity module installed.
