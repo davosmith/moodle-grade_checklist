@@ -6,6 +6,7 @@ http://moodle.org/plugins/view.php?plugin=mod_checklist
 
 ==Changes==
 
+* 2025-10-18 - 4.0.0.1 - M5.1 compatibility fixes
 * 2025-04-19 - 4.0.0.0 - M5.0 compatibility fixes, drop support for M3.11 and below
 * 2024-10-19 - 3.4.2.2 - Minor M4.5 compatibility fixes
 * 2024-04-05 - 3.4.2.1 - Minor M4.4 compatibility fixes
