@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 global $CFG, $PAGE, $DB, $CFG;
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 
 $courseid = required_param('id', PARAM_INT);
 
@@ -55,8 +55,19 @@ if (class_exists('\core_grades\output\export_action_bar')) {
     } else {
         $actionbar = new \core_grades\output\export_action_bar($context, null, 'checklist');
     }
-    print_grade_page_head($COURSE->id, 'export', 'checklist', $strchkgrades, false, false, true, null, null, null,
-                          $actionbar);
+    print_grade_page_head(
+        $COURSE->id,
+        'export',
+        'checklist',
+        $strchkgrades,
+        false,
+        false,
+        true,
+        null,
+        null,
+        null,
+        $actionbar
+    );
 } else {
     print_grade_page_head($COURSE->id, 'export', 'checklist', $strchkgrades);
 }
@@ -66,7 +77,7 @@ $modinfo = get_fast_modinfo($course);
 $checklists = $modinfo->get_instances_of('checklist');
 
 if (empty($checklists)) {
-    echo '<div class="alert alert-info">'.get_string('nochecklists', 'gradeexport_checklist').'</div>';
+    echo '<div class="alert alert-info">' . get_string('nochecklists', 'gradeexport_checklist') . '</div>';
     echo $OUTPUT->footer();
     die();
 }
@@ -83,7 +94,6 @@ if ($DB->get_record('user_info_field', ['shortname' => 'district'])) {
         } else {
             $districts = [get_string('nodistrict', 'gradeexport_checklist')];
         }
-
     } else {
         $sql = "SELECT DISTINCT ud.data AS district FROM {user_info_data} ud, {user_info_field} uf ";
         $sql .= "WHERE ud.fieldid = uf.id AND uf.shortname = 'district'";
@@ -113,7 +123,7 @@ if ($allowedgroups) {
 echo "<br /><div class=\"checklist_export_options\">";
 echo "<form action='{$CFG->wwwroot}/grade/export/checklist/export.php' method='post'>";
 
-echo '<label for="choosechecklist">'.get_string('choosechecklist', 'gradeexport_checklist').':</label> '.
+echo '<label for="choosechecklist">' . get_string('choosechecklist', 'gradeexport_checklist') . ':</label> ' .
     '<select id="choosechecklist" name="choosechecklist">';
 $selected = ' selected="selected" ';
 foreach ($checklists as $checklist) {
@@ -125,10 +135,10 @@ foreach ($checklists as $checklist) {
 echo '</select><br/>';
 
 if ($districts) {
-    echo '<label for="choosedistrict">'.get_string('choosedistrict', 'gradeexport_checklist').
+    echo '<label for="choosedistrict">' . get_string('choosedistrict', 'gradeexport_checklist') .
         ':</label> <select id="choosedistrict" name="choosedistrict">';
     if ($viewall) {
-        echo '<option selected="selected" value="ALL">'.get_string('alldistrict', 'gradeexport_checklist').'</option>';
+        echo '<option selected="selected" value="ALL">' . get_string('alldistrict', 'gradeexport_checklist') . '</option>';
         $selected = '';
     } else {
         $selected = ' selected="selected" ';
@@ -142,9 +152,9 @@ if ($districts) {
 
 if (count($groupsmenu) === 1) {
     $groupname = reset($groupsmenu);
-    echo '<input type="hidden" name="group" value="'.key($groupsmenu).'" />';
+    echo '<input type="hidden" name="group" value="' . key($groupsmenu) . '" />';
 } else {
-    echo '<label for="group">'.get_string('group').':</label> <select id="group" name="group">';
+    echo '<label for="group">' . get_string('group') . ':</label> <select id="group" name="group">';
     $selected = ' selected="selected" ';
     foreach ($groupsmenu as $groupid => $groupname) {
         echo "<option $selected value='{$groupid}'>$groupname</option>";
@@ -153,27 +163,26 @@ if (count($groupsmenu) === 1) {
     echo '</select><br/>';
 }
 
-echo '<label for="exportoptional">'.get_string('exportoptional', 'gradeexport_checklist').
+echo '<label for="exportoptional">' . get_string('exportoptional', 'gradeexport_checklist') .
     ':</label> <select id="exportoptional" name="exportoptional">';
-echo '<option selected="selected" value="1">'.get_string('yes').'</option>';
-echo '<option value="0">'.get_string('no').'</option>';
+echo '<option selected="selected" value="1">' . get_string('yes') . '</option>';
+echo '<option value="0">' . get_string('no') . '</option>';
 echo '</select><br/>';
 
-echo '<label for="percentcol">'.get_string('percentcol', 'gradeexport_checklist').':</label> ';
+echo '<label for="percentcol">' . get_string('percentcol', 'gradeexport_checklist') . ':</label> ';
 echo '<input type="checkbox" name="percentcol" id="percentcol" checked="checked" /> ';
-echo get_string('percentcol2', 'gradeexport_checklist').'<br/>';
-echo '<label for="percentrow">'.get_string('percentrow', 'gradeexport_checklist').':</label> ';
+echo get_string('percentcol2', 'gradeexport_checklist') . '<br/>';
+echo '<label for="percentrow">' . get_string('percentrow', 'gradeexport_checklist') . ':</label> ';
 echo '<input type="checkbox" name="percentrow" id="percentrow" /> ';
-echo get_string('percentrow2', 'gradeexport_checklist').'<br/>';
-echo '<label for="percentheadings">'.get_string('percentheadings', 'gradeexport_checklist').':</label> ';
+echo get_string('percentrow2', 'gradeexport_checklist') . '<br/>';
+echo '<label for="percentheadings">' . get_string('percentheadings', 'gradeexport_checklist') . ':</label> ';
 echo '<input type="checkbox" name="percentheadings" id="percentheadings" /> ';
-echo get_string('percentheadings2', 'gradeexport_checklist').'<br/><br/>';
+echo get_string('percentheadings2', 'gradeexport_checklist') . '<br/><br/>';
 
-echo '<input type="hidden" name="id" value="'.$course->id.'" />';
+echo '<input type="hidden" name="id" value="' . $course->id . '" />';
 
-echo '<input type="submit" name="export" value="'.get_string('export', 'gradeexport_checklist').'" />';
+echo '<input type="submit" name="export" value="' . get_string('export', 'gradeexport_checklist') . '" />';
 
 echo '</form></div>';
 
 echo $OUTPUT->footer();
-

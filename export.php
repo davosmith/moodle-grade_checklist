@@ -24,10 +24,10 @@
 
 // Note - to adjust the user columns included in the report, edit 'columns.php'.
 
-require_once(__DIR__.'/../../../config.php');
-require_once($CFG->dirroot.'/mod/checklist/lib.php'); // For CHECKLIST_* definitions.
-require_once($CFG->dirroot.'/grade/export/lib.php');
-require_once($CFG->dirroot.'/lib/excellib.class.php');
+require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->dirroot . '/mod/checklist/lib.php'); // For CHECKLIST_* definitions.
+require_once($CFG->dirroot . '/grade/export/lib.php');
+require_once($CFG->dirroot . '/lib/excellib.class.php');
 
 $courseid = required_param('id', PARAM_INT);
 $district = optional_param('choosedistrict', false, PARAM_TEXT);
@@ -84,8 +84,16 @@ $teachermarking = ($checklist->teacheredit != CHECKLIST_MARKING_STUDENT);
 
 $strchecklistreport = get_string('checklistreport', 'gradeexport_checklist');
 
-$users = get_users_by_capability($context, 'mod/checklist:updateown', 'u.*', 'u.firstname, u.lastname', '', '', $group,
-                                 false);
+$users = get_users_by_capability(
+    $context,
+    'mod/checklist:updateown',
+    'u.*',
+    'u.firstname, u.lastname',
+    '',
+    '',
+    $group,
+    false
+);
 
 if ($district && $district !== 'ALL' && $users) {
     [$usql, $uparam] = $DB->get_in_or_equal(array_keys($users));
@@ -102,7 +110,7 @@ if (!$users) {
     throw new moodle_exception('nousers', 'gradeexport_checklist');
 }
 
-require_once($CFG->dirroot.'/grade/export/checklist/columns.php');
+require_once($CFG->dirroot . '/grade/export/checklist/columns.php');
 if (!$percentcol) {
     unset($checklistexportusercolumns['_percent']);
 }
@@ -207,19 +215,22 @@ if ($percentheadings) {
     if ($exportoptional) {
         $itemoptional = ''; // All items.
     } else {
-        $itemoptional = ' AND itemoptional <> '.CHECKLIST_OPTIONAL_YES.' '; // All except optional items.
+        $itemoptional = ' AND itemoptional <> ' . CHECKLIST_OPTIONAL_YES . ' '; // All except optional items.
     }
 } else {
     if ($exportoptional) {
-        $itemoptional = ' AND itemoptional < '.CHECKLIST_OPTIONAL_HEADING; // All except headings.
+        $itemoptional = ' AND itemoptional < ' . CHECKLIST_OPTIONAL_HEADING; // All except headings.
     } else {
-        $itemoptional = ' AND itemoptional = '.CHECKLIST_OPTIONAL_NO; // Only required items.
+        $itemoptional = ' AND itemoptional = ' . CHECKLIST_OPTIONAL_NO; // Only required items.
     }
 }
 
-$items = $DB->get_records_select('checklist_item',
-                                 "checklist = ? AND userid = 0 $itemoptional AND hidden = 0",
-                                 [$checklist->id], 'position');
+$items = $DB->get_records_select(
+    'checklist_item',
+    "checklist = ? AND userid = 0 $itemoptional AND hidden = 0",
+    [$checklist->id],
+    'position'
+);
 if ($items) {
     $parentitem = 0;
     foreach ($items as $item) {
@@ -243,7 +254,7 @@ if ($items) {
         if (!$teachermarking) {
             $sql .= ' AND usertimestamp > 0 ';
         } else {
-            $sql .= ' AND teachermark = '.CHECKLIST_TEACHERMARK_YES.' ';
+            $sql .= ' AND teachermark = ' . CHECKLIST_TEACHERMARK_YES . ' ';
         }
         $sql .= ' GROUP BY item';
         $countitems = $DB->get_records_sql($sql, array_merge($iparam, $uparam));
@@ -262,7 +273,7 @@ if ($items) {
             } else if (empty($countitems[$item->id]->countitems)) {
                 $percent = '0%';
             } else {
-                $percent = round(100 * $countitems[$item->id]->countitems / $countusers, 0).'%';
+                $percent = round(100 * $countitems[$item->id]->countitems / $countusers, 0) . '%';
             }
             $myxls->write_string($row, $col++, $percent);
         }
@@ -286,7 +297,7 @@ foreach ($users as $user) {
         $first = reset($groups);
         $groupsstr = $first->name;
         while ($next = next($groups)) {
-            $groupsstr .= ', '.$next->name;
+            $groupsstr .= ', ' . $next->name;
         }
     } else {
         $groupsstr = '';
@@ -310,7 +321,6 @@ foreach ($users as $user) {
     foreach ($checklistexportusercolumns as $field => $header) {
         if ($field === '_groups') {
             $myxls->write_string($row, $col++, $groupsstr);
-
         } else if ($field === '_enroldate') {
             $sql = 'SELECT ue.id, ue.timestart FROM {user_enrolments} ue, {enrol} e ';
             $sql .= "WHERE e.id = ue.enrolid AND e.courseid = ? AND ue.userid = ? AND e.enrol <> 'guest' ";
@@ -322,7 +332,6 @@ foreach ($users as $user) {
                 $datestr = userdate($enrolement->timestart, get_string('strftimedate'));
             }
             $myxls->write_string($row, $col++, $datestr);
-
         } else if ($field === '_startdate') {
             $firstview = null;
             $manager = get_log_manager();
@@ -342,7 +351,6 @@ foreach ($users as $user) {
                 $datestr = userdate($firstview, get_string('strftimedate'));
             }
             $myxls->write_string($row, $col++, $datestr);
-
         } else if ($field === '_percent') {
             $checked = 0;
             $total = 0;
@@ -364,10 +372,9 @@ foreach ($users as $user) {
             if ($checked == 0) {
                 $percent = '';
             } else {
-                $percent = round(100 * $checked / $total, 0).'%';
+                $percent = round(100 * $checked / $total, 0) . '%';
             }
             $myxls->write_string($row, $col++, $percent);
-
         } else {
             safe_write_string($myxls, $row, $col++, $userarray, $extra, $field);
         }
@@ -390,7 +397,7 @@ foreach ($users as $user) {
                 }
             }
             if ($count = count($item->subitems)) {
-                $out .= round(100 * $checked / $count, 0).'%';
+                $out .= round(100 * $checked / $count, 0) . '%';
             }
         } else {
             if ($teachermarking) {

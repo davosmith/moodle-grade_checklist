@@ -26,7 +26,6 @@
  * Custom behat steps
  */
 class behat_gradeexport_checklist extends behat_base {
-
     /**
      * Convert page names to URLS for steps like 'When I am on the "[identifier]" "[page type]" page.
      * @param string $type
@@ -40,7 +39,7 @@ class behat_gradeexport_checklist extends behat_base {
             case 'export':
                 return new moodle_url('/grade/export/checklist/index.php', ['id' => $courseid]);
             default:
-                throw new Exception('Unrecognised checklist grade export page type "'.$type.'"');
+                throw new Exception('Unrecognised checklist grade export page type "' . $type . '"');
         }
     }
 }
