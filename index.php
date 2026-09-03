@@ -144,7 +144,8 @@ if ($districts) {
         $selected = ' selected="selected" ';
     }
     foreach ($districts as $district) {
-        echo "<option $selected value='{$district}'>{$district}</option>";
+        $val = s($district);
+        echo "<option {$selected} value='{$val}'>{$val}</option>";
         $selected = '';
     }
     echo '</select><br/>';
