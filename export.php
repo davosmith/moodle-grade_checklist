@@ -75,7 +75,7 @@ if ($group) {
     }
 }
 
-if (!$checklist = $DB->get_record('checklist', ['id' => $checklistid])) {
+if (!$checklist = $DB->get_record('checklist', ['id' => $checklistid, 'course' => $course->id])) {
     throw new moodle_exception('checklistnotfound', 'gradeexport_checklist');
 }
 
